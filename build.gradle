@@ -17,7 +17,7 @@ plugins {
 }
 
 group('tech.xiaoxian.aliyun')
-version('1.0.0')
+version('1.0.1')
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -47,6 +47,10 @@ dependencies {
     // 阿里云STS依赖
     compileOnly('com.aliyun:aliyun-java-sdk-sts:3.1.0')
     compileOnly('com.aliyun:aliyun-java-sdk-core:4.6.2')
+
+    // 测试依赖
+    compileOnly('com.google.code.gson:gson:2.10')
+    testImplementation('com.google.code.gson:gson:2.10')
 }
 
 test {
@@ -117,7 +121,12 @@ publishing {
     }
 }
 
+ext.releaseVersion = !version.toString().endsWith("-SNAPSHOT")
+
 signing {
+    setRequired {
+        releaseVersion && gradle.taskGraph.hasTask('publishToSonatype')
+    }
     useInMemoryPgpKeys(
             System.getenv("GPG_KEY_ID"),
             System.getenv("GPG_PRIVATE_KEY"),
