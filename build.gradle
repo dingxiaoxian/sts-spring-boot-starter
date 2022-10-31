@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java-library'
+    id 'idea'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group('tech.xiaoxian.aliyun')
+version('1.0.0-SNAPSHOT')
+
+compileJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+    doFirst {
+        println("当前Java版本为：" + sourceCompatibility)
+    }
+}
+
+allprojects {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+}
+dependencyManagement {
+    imports {
+        mavenBom('org.springframework.boot:spring-boot-dependencies:2.7.4')
+    }
+}
+dependencies {
+    // Spring dependencies
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+    implementation('org.springframework.boot:spring-boot-autoconfigure')
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+    // 阿里云STS依赖
+    compileOnly('com.aliyun:aliyun-java-sdk-sts:3.1.0')
+    compileOnly('com.aliyun:aliyun-java-sdk-core:4.6.2')
+}
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+            artifact jar
+        }
+    }
+}
