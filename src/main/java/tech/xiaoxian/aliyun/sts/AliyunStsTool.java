@@ -8,6 +8,7 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import tech.xiaoxian.aliyun.sts.model.Credentials;
+import tech.xiaoxian.aliyun.sts.model.Policy;
 
 public class AliyunStsTool {
     public static final String DEFAULT_REGION_ID = "";
@@ -34,6 +35,21 @@ public class AliyunStsTool {
         if (properties.getDurationSeconds() != null) {
             this.durationSeconds = properties.getDurationSeconds();
         }
+    }
+
+    public Credentials assumeRole(Policy policy, String sessionName) throws ClientException {
+        return assumeRole(policy.toString(), sessionName);
+    }
+
+    public Credentials assumeRole(Policy policy, String sessionName, long durationSeconds) throws ClientException {
+        return assumeRole(policy.toString(), sessionName, durationSeconds);
+    }
+
+    public Credentials assumeRole(String endpoint, String accessKeyId, String accessKeySecret,
+                                  String roleArn, String regionId,
+                                  Policy policy, String sessionName, Long durationSeconds) throws ClientException {
+        return assumeRole(endpoint, accessKeyId, accessKeySecret, roleArn, regionId,
+                policy.toString(), sessionName, durationSeconds);
     }
 
     public Credentials assumeRole(String policy, String sessionName) throws ClientException {

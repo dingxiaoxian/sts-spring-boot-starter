@@ -17,7 +17,7 @@ plugins {
 }
 
 group('tech.xiaoxian.aliyun')
-version('1.0.1')
+version('1.0.2')
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
