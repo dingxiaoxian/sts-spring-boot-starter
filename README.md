@@ -45,55 +45,57 @@ aliyun:
 public class YourService {
     @Resource
     private AliyunStsTool stsTool;
-    private String policyStr = """
-            {
-              "Version": "1",
-              "Statement": [
-                {
-                  "Action": [
-                    "oss:PutObject"
-                  ],
-                  "Resource": [
-                    "acs:oss:*:*:*"
-                  ],
-                  "Condition": {
-                    "IpAddress": {
-                      "acs:SourceIp": [
-                        "0.0.0.0/32"
-                      ]
-                    }
-                  },
-                  "Effect": "Allow"
-                }
-              ]
-            }
-            """;
-    private Policy policy = new Policy(
-            Collections.singletonList(
-                    new Policy.Statement(
-                            Collections.singletonList(
-                                    new Policy.Action("oss", "PutObject")
-                            ),
-                            Collections.singletonList(
-                                    new Policy.Resource("oss", "*", "*", "*")
-                            ),
-                            Collections.singletonMap(
-                                    Policy.Logic.IpAddress,
-                                    Collections.singletonMap(
-                                            new Policy.ServiceCondition("acs", "SourceIp"),
-                                            Collections.singletonList("0.0.0.0/32") // 所有ip
-                                    )
-                            ),
-                            Policy.Effect.Allow
-                    )
-            )
-    );
 
-    public Credentials getCredentials() throws ClientException {
-        Credentials credentials = stsTool.assumeRole(policy, "your_session_name");
-        // above and below statement are equivalence
-        // Credentials credentials = stsTool.assumeRole(policyStr, "your_session_name");
-        return credentials;
+    // policy and policyStr in below functions are equivalences
+    public Credentials getCredentialsByPolicy() throws ClientException {
+        private Policy policy = new Policy(
+                Collections.singletonList(
+                        new Policy.Statement(
+                                Collections.singletonList(
+                                        new Policy.Action("oss", "PutObject")
+                                ),
+                                Collections.singletonList(
+                                        new Policy.Resource("oss", "*", "*", "*")
+                                ),
+                                Collections.singletonMap(
+                                        Policy.Logic.IpAddress,
+                                        Collections.singletonMap(
+                                                new Policy.ServiceCondition("acs", "SourceIp"),
+                                                Collections.singletonList("0.0.0.0/32") // 所有ip
+                                        )
+                                ),
+                                Policy.Effect.Allow
+                        )
+                )
+        );
+        return stsTool.assumeRole(policy, "your_session_name");
+    }
+
+    public Credentials getCredentialsByPolicyStr() throws ClientException {
+        private String policyStr = """
+                {
+                  "Version": "1",
+                  "Statement": [
+                    {
+                      "Action": [
+                        "oss:PutObject"
+                      ],
+                      "Resource": [
+                        "acs:oss:*:*:*"
+                      ],
+                      "Condition": {
+                        "IpAddress": {
+                          "acs:SourceIp": [
+                            "0.0.0.0/32"
+                          ]
+                        }
+                      },
+                      "Effect": "Allow"
+                    }
+                  ]
+                }
+                """;
+        return stsTool.assumeRole(policyStr, "your_session_name");
     }
 }
 ```
