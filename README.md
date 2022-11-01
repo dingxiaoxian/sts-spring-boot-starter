@@ -1,7 +1,31 @@
 # 阿里云STS授权Spring Boot Starter
 
+[maven中央仓库地址](https://search.maven.org/artifact/tech.xiaoxian.aliyun/sts-spring-boot-starter)
+
+## usage
+
+### maven
+
+```xml
+
+<dependency>
+    <groupId>tech.xiaoxian.aliyun</groupId>
+    <artifactId>sts-spring-boot-starter</artifactId>
+    <version>1.0.2</version>
+    <type>pom</type>
+</dependency>
+```
+
+### gradle
+
+```groovy
+implementation 'tech.xiaoxian.aliyun:sts-spring-boot-starter:1.0.2'
+```
+
 ## starter 配置方法
+
 根据[官方文档](https://help.aliyun.com/document_detail/100624.html)在阿里云控制台中进行相应配置
+
 ```yaml
 aliyun:
   sts:
@@ -12,8 +36,11 @@ aliyun:
     region-id: "例如cn-hangzhou，也可以为空"
     duration-seconds: 3600 # 数字，为授权有效期秒数
 ```
+
 ## starter 使用方法
+
 ```java
+
 @Service
 public class YourService {
     @Resource
@@ -61,6 +88,7 @@ public class YourService {
                     )
             )
     );
+
     public Credentials getCredentials() throws ClientException {
         Credentials credentials = stsTool.assumeRole(policy, "your_session_name");
         // above and below statement are equivalence
