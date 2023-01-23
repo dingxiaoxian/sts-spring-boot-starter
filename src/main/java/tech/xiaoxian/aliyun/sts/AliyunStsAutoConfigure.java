@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 阿里云STS自动配置类
+ */
 @Configuration
 @ConditionalOnProperty("aliyun.sts.endpoint")
 @EnableConfigurationProperties(AliyunStsProperties.class)
