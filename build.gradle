@@ -1,23 +1,23 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url "https://maven.aliyun.com/repository/public" }
         mavenCentral()
     }
 }
 
 plugins {
-    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-    id 'org.springframework.boot' version '2.7.4'
-    id 'java-library'
-    id 'idea'
-    id 'maven-publish'
-    id 'signing'
+    id "io.github.gradle-nexus.publish-plugin" version "1.1.0"
+    id "io.spring.dependency-management" version "1.0.14.RELEASE"
+    id "org.springframework.boot" version "2.7.4"
+    id "java-library"
+    id "idea"
+    id "maven-publish"
+    id "signing"
 }
 
-group('tech.xiaoxian.aliyun')
-version('1.0.2')
+group("tech.xiaoxian.aliyun")
+version("1.0.3-SNAPSHOT")
 
 compileJava {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -25,7 +25,7 @@ compileJava {
     doFirst {
         println("当前Java版本为：" + sourceCompatibility)
     }
-    options.encoding('UTF-8')
+    options.encoding("UTF-8")
 }
 
 allprojects {
@@ -34,23 +34,23 @@ allprojects {
 }
 
 repositories {
-    maven { url 'https://maven.aliyun.com/repository/public' }
+    maven { url "https://maven.aliyun.com/repository/public" }
     mavenCentral()
 }
 
 dependencies {
     // Spring dependencies
-    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
-    api('org.springframework.boot:spring-boot-autoconfigure')
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    api("org.springframework.boot:spring-boot-autoconfigure")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     // 阿里云STS依赖
-    compileOnly('com.aliyun:aliyun-java-sdk-sts:3.1.0')
-    compileOnly('com.aliyun:aliyun-java-sdk-core:4.6.2')
+    compileOnly("com.aliyun:aliyun-java-sdk-sts:3.1.0")
+    compileOnly("com.aliyun:aliyun-java-sdk-core:4.6.2")
 
     // 测试依赖
-    compileOnly('com.google.code.gson:gson:2.10')
-    testImplementation('com.google.code.gson:gson:2.10')
+    compileOnly("com.google.code.gson:gson:2.10")
+    testImplementation("com.google.code.gson:gson:2.10")
 }
 
 test {
@@ -83,10 +83,10 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
                 }
-                usage('java-runtime') {
+                usage("java-runtime") {
                     fromResolutionResult()
                 }
             }
@@ -96,25 +96,25 @@ publishing {
             from components.java
             pom {
                 name = project.name
-                description = 'aliyun STS spring boot starter'
-                url = 'https://github.com/dingxiaoxian/sts-spring-boot-starter'
+                description = "aliyun STS spring boot starter"
+                url = "https://github.com/dingxiaoxian/sts-spring-boot-starter"
                 licenses {
                     license {
-                        name = 'MIT License'
-                        url = 'https://www.mit.edu/~amini/LICENSE.md'
+                        name = "MIT License"
+                        url = "https://www.mit.edu/~amini/LICENSE.md"
                     }
                 }
                 developers {
                     developer {
-                        id = 'dingxiaoxian'
-                        name = 'Ding Xiaoxian'
-                        email = 'dingxiaoxian@xiaoxian.tech'
+                        id = "dingxiaoxian"
+                        name = "Ding Xiaoxian"
+                        email = "dingxiaoxian@xiaoxian.tech"
                     }
                 }
                 scm {
-                    connection = 'scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git'
-                    developerConnection = 'scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git'
-                    url = 'https://github.com/dingxiaoxian/sts-spring-boot-starter'
+                    connection = "scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git"
+                    developerConnection = "scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git"
+                    url = "https://github.com/dingxiaoxian/sts-spring-boot-starter"
                 }
             }
         }
@@ -125,7 +125,7 @@ ext.releaseVersion = !version.toString().endsWith("-SNAPSHOT")
 
 signing {
     setRequired {
-        releaseVersion && gradle.taskGraph.hasTask('publishToSonatype')
+        releaseVersion && gradle.taskGraph.hasTask("publishToSonatype")
     }
     useInMemoryPgpKeys(
             System.getenv("GPG_KEY_ID"),
