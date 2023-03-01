@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import org.bouncycastle.util.IPAddress;
 
 import java.io.IOException;
 import java.util.Date;
@@ -29,6 +28,10 @@ public class Policy {
 
     public Policy(List<Statement> statement) {
         this.Statement = statement;
+    }
+
+    public Policy(Statement... statement) {
+        this(List.of(statement));
     }
 
     public static class Statement {

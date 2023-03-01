@@ -2,7 +2,8 @@ package tech.xiaoxian.aliyun.sts.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -11,19 +12,19 @@ class PolicyTest {
     @Test
     void toJsonString() {
         Policy policy = new Policy(
-                Collections.singletonList(
+                List.of(
                         new Policy.Statement(
-                                Collections.singletonList(
+                                List.of(
                                         new Policy.Action("oss", "PutObject")
                                 ),
-                                Collections.singletonList(
+                                List.of(
                                         new Policy.Resource("oss", "*", "*", "*")
                                 ),
-                                Collections.singletonMap(
+                                Map.of(
                                         Policy.Logic.IpAddress,
-                                        Collections.singletonMap(
+                                        Map.of(
                                                 new Policy.ServiceCondition("acs", "SourceIp"),
-                                                Collections.singletonList("0.0.0.0/32") // 所有ip
+                                                List.of("0.0.0.0/32") // 所有ip
                                         )
                                 ),
                                 Policy.Effect.Allow

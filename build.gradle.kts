@@ -1,3 +1,4 @@
+fun properties(key: String) = project.findProperty(key).toString()
 buildscript {
     repositories {
         mavenLocal()
@@ -8,24 +9,17 @@ buildscript {
 
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    id("io.spring.dependency-management") version "1.0.14.RELEASE"
-    id("org.springframework.boot") version "2.7.4"
+    id("io.spring.dependency-management") version "1.1.0"
+    id("org.springframework.boot") version "3.0.2"
     id("java-library")
     id("idea")
     id("maven-publish")
     id("signing")
 }
 
-tasks.withType<JavaCompile> {
-    doFirst {
-        println("当前Java版本为：$sourceCompatibility")
-    }
-    options.encoding = "UTF-8"
-}
-
 allprojects {
-    group = "tech.xiaoxian.aliyun"
-    version = "1.0.3"
+    group = properties("projectGroup")
+    version = properties("projectVersion")
 
     // Configure project's dependencies
     repositories {
@@ -42,30 +36,36 @@ dependencies {
 
     // 阿里云STS依赖
     compileOnly("com.aliyun:aliyun-java-sdk-sts:3.1.0")
-    compileOnly("com.aliyun:aliyun-java-sdk-core:4.6.2")
+    compileOnly("com.aliyun:aliyun-java-sdk-core:4.6.3")
 
     // 测试依赖
-    compileOnly("com.google.code.gson:gson:2.10")
-    testImplementation("com.google.code.gson:gson:2.10")
+    compileOnly("com.google.code.gson:gson:2.10.1")
+    testImplementation("com.google.code.gson:gson:2.10.1")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
-tasks.bootJar {
-    enabled = false
-}
-
-tasks.jar {
-    enabled = true
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-    withJavadocJar()
-    withSourcesJar()
+tasks {
+    withType<JavaCompile> {
+        doFirst {
+            println("当前Java版本为：$sourceCompatibility")
+        }
+        options.encoding = "UTF-8"
+    }
+    test {
+        useJUnitPlatform()
+    }
+    bootJar {
+        enabled = false
+    }
+    jar {
+        enabled = true
+        archiveClassifier.set("")
+    }
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        withJavadocJar()
+        withSourcesJar()
+    }
 }
 
 nexusPublishing {
@@ -94,8 +94,8 @@ publishing {
             from(components["java"])
             pom {
                 name.set(project.name)
-                description.set("aliyun STS spring boot starter")
-                url.set("https://github.com/dingxiaoxian/sts-spring-boot-starter")
+                description.set(properties("projectDescription"))
+                url.set(properties("projectUrl"))
                 licenses {
                     license {
                         name.set("MIT License")
@@ -104,26 +104,24 @@ publishing {
                 }
                 developers {
                     developer {
-                        id.set("dingxiaoxian")
-                        name.set("Ding Xiaoxian")
-                        email.set("dingxiaoxian@xiaoxian.tech")
+                        id.set(properties("projectAuthorId"))
+                        name.set(properties("projectAuthorName"))
+                        email.set(properties("projectAuthorEmail"))
                     }
                 }
                 scm {
-                    connection.set("scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git")
-                    developerConnection.set("scm:git@github.com:dingxiaoxian/sts-spring-boot-starter.git")
-                    url.set("https://github.com/dingxiaoxian/sts-spring-boot-starter")
+                    connection.set(properties("projectScmUrl"))
+                    developerConnection.set(properties("projectScmUrl"))
+                    url.set(properties("projectUrl"))
                 }
             }
         }
     }
 }
 
-extra["isReleaseVersion"] = !version.toString().endsWith("-SNAPSHOT")
-
 signing {
     setRequired {
-        (project.extra["isReleaseVersion"] as Boolean) && gradle.taskGraph.hasTask("publishToSonatype")
+        !version.toString().endsWith("-SNAPSHOT") && gradle.taskGraph.hasTask("publishToSonatype")
     }
     useInMemoryPgpKeys(
         System.getenv("GPG_KEY_ID"),

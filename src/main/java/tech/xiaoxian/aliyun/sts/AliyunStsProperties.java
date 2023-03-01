@@ -2,7 +2,7 @@ package tech.xiaoxian.aliyun.sts;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("aliyun.sts")
+@ConfigurationProperties("xiaoxian.aliyun.sts")
 public class AliyunStsProperties {
     private String endpoint;
     private String accessKeyId;

@@ -11,7 +11,7 @@
 <dependency>
     <groupId>tech.xiaoxian.aliyun</groupId>
     <artifactId>sts-spring-boot-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <type>pom</type>
 </dependency>
 ```
@@ -19,7 +19,7 @@
 ### gradle
 
 ```groovy
-implementation 'tech.xiaoxian.aliyun:sts-spring-boot-starter:1.0.2'
+implementation 'tech.xiaoxian.aliyun:sts-spring-boot-starter:1.0.4'
 ```
 
 ## starter 配置方法
@@ -27,14 +27,15 @@ implementation 'tech.xiaoxian.aliyun:sts-spring-boot-starter:1.0.2'
 根据[官方文档](https://help.aliyun.com/document_detail/100624.html)在阿里云控制台中进行相应配置
 
 ```yaml
-aliyun:
-  sts:
-    access-key-id: "RAM用户的accessKeyId"
-    access-key-secret: "RAM用户的accessKeySecret"
-    endpoint: "例如sts.cn-hangzhou.aliyuncs.com"
-    role-arn: "RAM角色的ARN配置"
-    region-id: "例如cn-hangzhou，也可以为空"
-    duration-seconds: 3600 # 数字，为授权有效期秒数
+xiaoxian:
+  aliyun:
+    sts:
+      access-key-id: "RAM用户的accessKeyId"
+      access-key-secret: "RAM用户的accessKeySecret"
+      endpoint: "例如sts.cn-hangzhou.aliyuncs.com"
+      role-arn: "RAM角色的ARN配置"
+      region-id: "例如cn-hangzhou，也可以为空"
+      duration-seconds: 3600 # 数字，为授权有效期秒数
 ```
 
 ## starter 使用方法
@@ -48,20 +49,20 @@ public class YourService {
 
     // policy and policyStr in below functions are equivalences
     public Credentials getCredentialsByPolicy() throws ClientException {
-        private Policy policy = new Policy(
-                Collections.singletonList(
+        Policy policy = new Policy(
+                List.of(
                         new Policy.Statement(
-                                Collections.singletonList(
+                                List.of(
                                         new Policy.Action("oss", "PutObject")
                                 ),
-                                Collections.singletonList(
+                                List.of(
                                         new Policy.Resource("oss", "*", "*", "*")
                                 ),
-                                Collections.singletonMap(
+                                Map.of(
                                         Policy.Logic.IpAddress,
-                                        Collections.singletonMap(
+                                        Map.of(
                                                 new Policy.ServiceCondition("acs", "SourceIp"),
-                                                Collections.singletonList("0.0.0.0/32") // 所有ip
+                                                List.of("0.0.0.0/32") // 所有ip
                                         )
                                 ),
                                 Policy.Effect.Allow
@@ -72,7 +73,7 @@ public class YourService {
     }
 
     public Credentials getCredentialsByPolicyStr() throws ClientException {
-        private String policyStr = """
+        String policyStr = """
                 {
                   "Version": "1",
                   "Statement": [

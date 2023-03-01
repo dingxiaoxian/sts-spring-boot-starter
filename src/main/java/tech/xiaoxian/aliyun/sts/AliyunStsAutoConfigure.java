@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * 阿里云STS自动配置类
  */
 @Configuration
-@ConditionalOnProperty("aliyun.sts.endpoint")
+@ConditionalOnProperty("xiaoxian.aliyun.sts.endpoint")
 @EnableConfigurationProperties(AliyunStsProperties.class)
 public class AliyunStsAutoConfigure {
     private final AliyunStsProperties properties;
